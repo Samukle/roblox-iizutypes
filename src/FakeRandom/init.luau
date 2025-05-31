@@ -1,4 +1,8 @@
 -- TODO@OPTIM Type checking
+-- TODO@OPTIM Documentation
+
+local iizutypes = require(script.Parent)
+
 local FakeRandom = { }
 local schema = { }
 local shadow = { __index = schema, __type = 'FakeRandom' }
@@ -64,5 +68,7 @@ export type FakeRandom = {
       Max: number
 }
 
-require(script.Parent).new { name = 'FakeRandom', class = FakeRandom, schema = schema, shadow = shadow }
+iizutypes.new { name = 'FakeRandom', class = FakeRandom, schema = schema, shadow = shadow }
+
+table.freeze(FakeRandom)
 return FakeRandom

@@ -1,4 +1,7 @@
 -- TODO@FEATURE Vector6:ToObjectSpace() / Vector6:ToWorldSpace()
+-- TODO@OPTIM Documentation
+
+local iizutypes = require(script.Parent)
 
 local Vector6 = { }
 local schema = { }
@@ -23,7 +26,7 @@ do -- Body
             x: number|Vector3|Vector6?, y: number|Vector3?, z: number?,
             w: number?, h: number?,d: number?
       ) : Vector6
-            if Vector6.Is(x) then
+            if iizutypes.IsA(x, TYPE_VECTOR6) then
                   d = x [COMP5]
                   h = x [COMP4]
                   w = x [COMP3]
@@ -204,16 +207,6 @@ do -- Shadow set-up
 
 end
 
-Vector6.zero = Vector6.new( 0,0,0, 0,0,0 )
-Vector6.one  = Vector6.new( 1,1,1, 1,1,1 )
-
-Vector6.xAxis = Vector6.new( 1,0,0, 0,0,0 )
-Vector6.yAxis = Vector6.new( 0,1,0, 0,0,0 )
-Vector6.zAxis = Vector6.new( 0,0,1, 0,0,0 )
-Vector6.wAxis = Vector6.new( 0,0,0, 1,0,0 )
-Vector6.hAxis = Vector6.new( 0,0,0, 0,1,0 )
-Vector6.dAxis = Vector6.new( 0,0,0, 0,0,1 )
-
 export type Vector6 = {
       X: number, W: number,
       Y: number, H: number,
@@ -234,5 +227,17 @@ export type Vector6 = {
       RayCast: ( self: Vector6, params: RaycastParams, dataModel: DataModel? ) -> RaycastResult
 }
 
-require(script.Parent).new { name = 'Vector6', class = Vector6, schema = schema, shadow = shadow }
+iizutypes.new { name = 'Vector6', class = Vector6, schema = schema, shadow = shadow }
+
+Vector6.zero = Vector6.new( 0,0,0, 0,0,0 )
+Vector6.one  = Vector6.new( 1,1,1, 1,1,1 )
+
+Vector6.xAxis = Vector6.new( 1,0,0, 0,0,0 )
+Vector6.yAxis = Vector6.new( 0,1,0, 0,0,0 )
+Vector6.zAxis = Vector6.new( 0,0,1, 0,0,0 )
+Vector6.wAxis = Vector6.new( 0,0,0, 1,0,0 )
+Vector6.hAxis = Vector6.new( 0,0,0, 0,1,0 )
+Vector6.dAxis = Vector6.new( 0,0,0, 0,0,1 )
+
+table.freeze(Vector6)
 return Vector6

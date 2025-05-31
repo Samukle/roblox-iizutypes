@@ -1,4 +1,7 @@
 -- TODO@FEATURE Vector4:ToObjectSpace() / Vector4:ToWorldSpace()
+-- TODO@OPTIM Documentation
+
+local iizutypes = require(script.Parent)
 
 local Vector4 = { }
 local schema = { }
@@ -20,7 +23,7 @@ do -- Body
       function Vector4.new (
             x: number|Vector3|Vector4?, y: number?, z: number?, a: number?
       ) : Vector4
-            if Vector4.Is(x) then
+            if iizutypes.IsA(x, TYPE_VECTOR4) then
                   a = x [COMP3]
                   z = x [COMP2]
                   y = x [COMP1]
@@ -87,7 +90,7 @@ do -- Body
       end
       
       -- Returns two Vector2 with the XY and ZA components
-      function Vector2.ToVector3 ( x: Vector4 ) : ( Vector2, Vector2 )
+      function Vector4.ToVector2 ( x: Vector4 ) : ( Vector2, Vector2 )
             assert(Vector4.Is(x), string.format(ERR_NOT_WANTED_TYPE, TYPE_VECTOR4, typeof(x)))
             return Vector2.new(x.X, x.Y), Vector2.new(x.Z, x.A)
       end
@@ -217,14 +220,6 @@ do -- Shadow set-up
 
 end
 
-Vector4.zero = Vector4.new( 0,0,0,0 )
-Vector4.one  = Vector4.new( 1,1,1,1 )
-
-Vector4.xAxis = Vector4.new( 1,0,0,0 )
-Vector4.yAxis = Vector4.new( 0,1,0,0 )
-Vector4.zAxis = Vector4.new( 0,0,1,0 )
-Vector4.aAxis = Vector4.new( 0,0,0,1 )
-
 export type Vector4 = {
       X: number,
       Y: number,
@@ -243,5 +238,15 @@ export type Vector4 = {
       Lerp: ( x: Vector4, y: Vector4, a: number ) -> Vector4,
 }
 
-require(script.Parent).new { name = 'Vector4', class = Vector4, schema = schema, shadow = shadow }
+iizutypes.new { name = 'Vector4', class = Vector4, schema = schema, shadow = shadow }
+
+Vector4.zero = Vector4.new( 0,0,0,0 )
+Vector4.one  = Vector4.new( 1,1,1,1 )
+
+Vector4.xAxis = Vector4.new( 1,0,0,0 )
+Vector4.yAxis = Vector4.new( 0,1,0,0 )
+Vector4.zAxis = Vector4.new( 0,0,1,0 )
+Vector4.aAxis = Vector4.new( 0,0,0,1 )
+
+table.freeze(Vector4)
 return Vector4

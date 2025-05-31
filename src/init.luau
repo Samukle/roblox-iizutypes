@@ -34,7 +34,6 @@ do -- Body
             schema.__queue_free = __queue_free
 
             setmetatable(data.class, shadow)
-            table.freeze(data.class)
             List [data.name] = data.class
             return true
       end
