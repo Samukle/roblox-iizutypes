@@ -1,3 +1,5 @@
+-- TODO@FEATURE Vector6:ToObjectSpace() / Vector6:ToWorldSpace()
+
 local Vector6 = { }
 local schema = { }
 local shadow = { __index = schema, __type = 'Vector6' }
@@ -74,9 +76,17 @@ do -- Body
             return x:ToVector3XYZ(), x:ToVector3WHD()
       end
 
-      -- Alias for Vector6.SchemaSet ()
-      function Vector6.SchemaTake ( var: string )
-            schema [var] = nil
+
+      -- Returns a Ray with the XYZ and WHD components
+      function Vector6.ToRay ( x: Vector6 ) : Ray
+            assert(Vector6.Is(x), string.format(ERR_NOT_WANTED_TYPE, TYPE_VECTOR6, typeof(x)))
+            return Ray.new(x:ToVector3())
+      end
+      
+      -- Casts a ray with the XYZ and WHD components, with an optional `dataModel` option
+      function Vector6.RayCast ( self: Vector6, params: RaycastParams, dataModel: DataModel? ) : RaycastResult
+            assert(Vector6.Is(self), string.format(ERR_NOT_WANTED_TYPE, TYPE_VECTOR6, typeof(self)))
+            return (dataModel or workspace):Raycast(self:ToVector3(), params)
       end
 
 end
@@ -88,9 +98,8 @@ do -- Schema
                   rawget(self, COMP3), rawget(self, COMP4), rawget(self, COMP5)
       end
 
-      function schema.ToVector3( self: Vector6 ): ( Vector3, Vector3 )
-            return Vector6.ToVector3(self)
-      end
+     schema.ToVector3 = Vector6.ToVector3
+     schema.ToRay = Vector6.ToRay
 
       function schema.ToVector3XYZ( self: Vector6 ): Vector3
             return Vector3.new(self.X, self.Y, self.Z)
@@ -109,11 +118,7 @@ do -- Schema
             return v6
       end
 
-      function schema.__queue_free ( self: Vector6 ): ( )
-            setmetatable(self, nil)
-            table.clear(self)
-            table.freeze(self)
-      end
+      schema.RayCast = Vector6.RayCast
 
 end
 
@@ -146,13 +151,13 @@ do -- Shadow set-up
             return Vector6.new ( -self.X, -self.Y, -self.Z, -self.W, -self.H, -self.D )
       end
 
-      function shadow.__add( self: Vector6, val: number|Vector3|Vector6 ): Vector6
+      function shadow.__add( self: Vector6, val: Vector3|Vector6 ): Vector6
             if Vector6.Is(val) then
                   return Vector6.new ( self.X+val.X, self.Y+val.Y, self.Z+val.Z, self.W+val.W, self.H+val.H, self.D+val.D )
             end
       end
       
-      function shadow.__sub( self: Vector6, val: number|Vector3|Vector6 ): Vector6
+      function shadow.__sub( self: Vector6, val: Vector3|Vector6 ): Vector6
             if Vector6.Is(val) then
                   return Vector6.new ( self.X-val.X, self.Y-val.Y, self.Z-val.Z, self.W-val.W, self.H-val.H, self.D-val.D )
             end
@@ -218,7 +223,9 @@ export type Vector6 = {
       ToVector3: ( self: Vector6 ) -> ( Vector3, Vector3 ),
       ToVector3XYZ: ( self: Vector6 ) -> ( Vector3 ),
       ToVector3WHD: ( self: Vector6 ) -> ( Vector3 ),
+      ToRay: ( self: Vector6 ) -> Ray,
       Lerp: ( x: Vector6, y: Vector6, a: number ) -> Vector6,
+      RayCast: ( self: Vector6, params: RaycastParams, dataModel: DataModel? ) -> RaycastResult
 }
 
 require(script.Parent).new { name = 'Vector6', class = Vector6, schema = schema, shadow = shadow }

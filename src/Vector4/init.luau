@@ -1,3 +1,5 @@
+-- TODO@FEATURE Vector4:ToObjectSpace() / Vector4:ToWorldSpace()
+
 local Vector4 = { }
 local schema = { }
 local shadow = { __index = schema, __type = 'Vector4' }
@@ -50,6 +52,21 @@ do -- Body
             return Vector4.new(x.X, x.Y, x.Z, a)
       end
 
+      -- Creates a Vector4 based out of two Vector2.
+      function Vector4.fromVector2 ( x: Vector2, y: Vector2 ): Vector4
+            return Vector4.new(x.X, x.Y, y.X, y.Y)
+      end
+
+      -- Creates a Vector4 based out of a UDim2.
+      function Vector4.fromUDim2 ( x: UDim2 ): Vector4
+            return Vector4.new(x.X.Scale, x.X.Offset, x.Y.Scale, x.Y.Offset )
+      end
+
+      -- Creates a Vector4 based out of a Rect.
+      function Vector4.fromRect ( x: Rect ): Vector4
+            return Vector4.new(x.Min.X, x.Min.Y, x.Max.X, x.Max.Y )
+      end
+
       
       -- Returns the Magnitude component of the Vector4 `x`
       function Vector4.GetMagnitude ( x: Vector4 ) : number
@@ -67,9 +84,34 @@ do -- Body
       -- Returns a Vector3 with the XYZ components
       function Vector4.ToVector3 ( x: Vector4 ) : Vector3
             assert(Vector4.Is(x), string.format(ERR_NOT_WANTED_TYPE, TYPE_VECTOR4, typeof(x)))
-            return x:ToVector3()
+            return Vector3.new(x.X, x.Y, x.Z)
+      end
+      
+      -- Returns two Vector2 with the XY and ZA components
+      function Vector2.ToVector3 ( x: Vector4 ) : ( Vector2, Vector2 )
+            assert(Vector4.Is(x), string.format(ERR_NOT_WANTED_TYPE, TYPE_VECTOR4, typeof(x)))
+            return Vector2.new(x.X, x.Y), Vector2.new(x.Z, x.A)
+      end
+      
+      -- Returns a UDim2 with the XYZA components:
+      -- - `X` = `x` Scale
+      -- - `Y` = `x` Offset
+      -- - `Z` = `y` Scale
+      -- - `A` = `y` Offset
+      function Vector4.ToUDim2 ( x: Vector4 ) : UDim2
+            assert(Vector4.Is(x), string.format(ERR_NOT_WANTED_TYPE, TYPE_VECTOR4, typeof(x)))
+            return UDim2.new(x.X, x.Y, x.Z, x.A)
       end
 
+      -- Returns a Rect with the XYZA components:
+      -- - `X` = `x` min
+      -- - `Y` = `y` min
+      -- - `Z` = `x` max
+      -- - `A` = `y` max
+      function Vector4.ToRect ( x: Vector4 ) : Rect
+            assert(Vector4.Is(x), string.format(ERR_NOT_WANTED_TYPE, TYPE_VECTOR4, typeof(x)))
+            return Rect.new(x.X, x.Y, x.Z, x.A)
+      end
 end
 
 do -- Schema
@@ -78,9 +120,10 @@ do -- Schema
             return rawget(self, COMP0), rawget(self, COMP1), rawget(self, COMP2), rawget(self, COMP3)
       end
 
-      function schema.ToVector3( self: Vector4 ): Vector3
-            return Vector4.ToVector3(self)
-      end
+      schema.ToVector3 = Vector4.ToVector3
+      schema.ToVector2 = Vector4.ToVector2
+      schema.ToUDim2 = Vector4.ToUDim2
+      schema.ToRect = Vector4.ToRect
 
       function schema.Lerp ( x: Vector4, y: Vector4, a: number ): Vector4
             assert(Vector4.Is(x), string.format(ERR_NOT_WANTED_TYPE, TYPE_VECTOR4, typeof(x)))
@@ -117,7 +160,7 @@ do -- Shadow set-up
             return Vector4.new ( -self.X, -self.Y, -self.Z, -self.A )
       end
 
-      function shadow.__add( self: Vector4, val: number|Vector3|Vector4 ): Vector4
+      function shadow.__add( self: Vector4, val: Vector3|Vector4 ): Vector4
             if Vector4.Is(val) then
                   return Vector4.new ( self.X+val.X, self.Y+val.Y, self.Z+val.Z, self.A+val.A )
             elseif typeof(val) == TYPE_VECTOR3 then
@@ -125,7 +168,7 @@ do -- Shadow set-up
             end
       end
       
-      function shadow.__sub( self: Vector4, val: number|Vector3|Vector4 ): Vector4
+      function shadow.__sub( self: Vector4, val: Vector3|Vector4 ): Vector4
             if Vector4.Is(val) then
                   return Vector4.new ( self.X-val.X, self.Y-val.Y, self.Z-val.Z, self.A-val.A )
             elseif typeof(val) == TYPE_VECTOR3 then
@@ -189,9 +232,10 @@ export type Vector4 = {
       Magnitude: number,
       MagnitudeXYZ: number,
 
-      ToVector3: ( self: Vector4 ) -> ( Vector3, Vector3 ),
-      ToVector3XYZ: ( self: Vector4 ) -> ( Vector3 ),
-      ToVector3WHD: ( self: Vector4 ) -> ( Vector3 ),
+      ToVector3: ( self: Vector4 ) -> Vector3,
+      ToVector2: ( self: Vector4 ) -> ( Vector2, Vector2 ),
+      ToUDim2: ( self: Vector4 ) -> UDim2,
+      ToRect: ( self: Vector4 ) -> Rect,
       Lerp: ( x: Vector4, y: Vector4, a: number ) -> Vector4,
 }
 

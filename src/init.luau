@@ -55,7 +55,8 @@ do -- Body
             for type, data in List do
                   if data:Is (obj) then return type end
             end
-            error(string.format(ERR_UNKNOWN_TYPE, 'could not identify as IizuType'))
+            return typeof(obj)
+            --error(string.format(ERR_UNKNOWN_TYPE, 'could not identify as IizuType'))
       end
 
 end
@@ -75,13 +76,19 @@ do -- Schema
             return rawget(self, METADATA).schema [var]
       end
 
+      -- Alias for IizuType:schemaSet ( var, nil )
+      function schema.schemaTake ( self: IizuType, var: any )
+            self [var] = nil
+      end
+
 end
 
 export type IizuType = {
       Is : ( self: IizuType, obj: any ) -> boolean,
 
-      SchemaSet : ( self: IizuType, var: any, val: any ) -> ( ),
-      SchemaGet : ( self: IizuType, var: any ) -> ( )
+      schemaSet : ( self: IizuType, var: any, val: any ) -> ( ),
+      schemaGet : ( self: IizuType, var: any ) -> ( ),
+      schemaTake : ( self: IizuType, var: any ) -> ( )
 }
 
 table.freeze(IizuType)
