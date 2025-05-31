@@ -11,7 +11,6 @@ local ERR_READ_ONLY = shared.ERR_READ_ONLY
 local TYPE_VECTOR3 = 'Vector3'
 local TYPE_VECTOR6 = 'Vector6'
 local TYPE_NUMBER = 'number'
-local TYPE_TABLE = 'table'
 local COMP0, COMP1, COMP2,
       COMP3, COMP4, COMP5 =
       'X', 'Y', 'Z',

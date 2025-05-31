@@ -10,6 +10,7 @@ rojo build -o "iizutypes.rbxm"
 | :----------: | -------------------------------|-------------------------- |
 | Vector6      | A vector with 6 components: `X`, `Y`, `Z`, `W`, `H`, `D`  | Having to store position + size or position + orientation, easy raycasting. |
 | Vector4      | A vector with 4 components: `X`, `Y`, `Z`, `A` | Having to store alpha with colors, quick UDim2 |
+| FakeRandom   | Gives out "random" numbers by going through an array | Emulating old RNG methods |
 
 ## Potential types
 These types may not be present in the current version and are also subject to removal.
