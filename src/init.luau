@@ -1,3 +1,4 @@
+-- TODO@OPTIM Documentation
 local shared = require(script._shared)
 local ERR_NOT_WANTED_TYPE = shared.ERR_NOT_WANTED_TYPE
 local ERR_UNKNOWN_TYPE = "Unknown type %*"

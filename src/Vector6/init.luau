@@ -208,6 +208,13 @@ end
 Vector6.zero = Vector6.new( 0,0,0, 0,0,0 )
 Vector6.one  = Vector6.new( 1,1,1, 1,1,1 )
 
+Vector6.xAxis = Vector6.new( 1,0,0, 0,0,0 )
+Vector6.yAxis = Vector6.new( 0,1,0, 0,0,0 )
+Vector6.zAxis = Vector6.new( 0,0,1, 0,0,0 )
+Vector6.wAxis = Vector6.new( 0,0,0, 1,0,0 )
+Vector6.hAxis = Vector6.new( 0,0,0, 0,1,0 )
+Vector6.dAxis = Vector6.new( 0,0,0, 0,0,1 )
+
 export type Vector6 = {
       X: number, W: number,
       Y: number, H: number,

@@ -221,6 +221,11 @@ end
 Vector4.zero = Vector4.new( 0,0,0,0 )
 Vector4.one  = Vector4.new( 1,1,1,1 )
 
+Vector4.xAxis = Vector4.new( 1,0,0,0 )
+Vector4.yAxis = Vector4.new( 0,1,0,0 )
+Vector4.zAxis = Vector4.new( 0,0,1,0 )
+Vector4.aAxis = Vector4.new( 0,0,0,1 )
+
 export type Vector4 = {
       X: number,
       Y: number,
